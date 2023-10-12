@@ -91,6 +91,15 @@ def product_delete(request, pk):
     return render(request, 'dashboard/products_delete.html')
 
 @login_required
+def product_view(request, pk):
+    item = Product.objects.get(id=pk)
+    context = {
+        'item':item,
+    }
+    return render(request, 'dashboard/product_view.html', context)
+
+
+@login_required
 def product_edit(request, pk):
     item = get_object_or_404(Product, id=pk)
     if request.method == 'POST':

@@ -14,6 +14,9 @@ class Product(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY, null=True)
     quantity = models.PositiveIntegerField(null=True)
     cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    cogs = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0)
+    holding_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0)
+
     def __str__(self):
         return f'{self.name}-{self.quantity}'
 
@@ -27,6 +30,9 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     order_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
+    def calculate_cogs(self):
+        return self.product.cost_per_unit * self.order_quantity
+
     class Meta:
         verbose_name_plural = 'Order'
 
@@ -38,6 +44,9 @@ class Order(models.Model):
         # Update the inventory metrics
         if self.product:
             self.order_cost = self.product.cost_per_unit * self.order_quantity
+            self.product.cogs += self.calculate_cogs()
+            self.product.quantity -= self.order_quantity
+            self.product.save()
             super().save(*args, **kwargs)
             
 class InventoryMetrics(models.Model):

@@ -28,7 +28,6 @@
             <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Category</th>
                     <th scope="col">Cost Per Unit</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Activity</th>
@@ -38,10 +37,11 @@
                 {% for item in items %}
                 <tr>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.category }}</td>
                     <td>{{ item.cost_per_unit }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>
+                        <a class="btn btn-info btn-sm mr-2"
+                            href="{% url 'dashboard-product-view' item.id %}">View</a>
                         <a class="btn btn-info btn-sm mr-2"
                             href="{% url 'dashboard-products-edit' item.id %}">Edit</a>
                         <a class="btn btn-danger btn-sm ml-2"

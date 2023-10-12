@@ -1,0 +1,35 @@
+{% extends 'partials/base.html' %}
+{% block title %}Products View Page{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row my-4">
+    <div class="col-md-8 offset-md-3 p-3 bg-white">
+        <h4>View Product Item</h4>
+        <hr>
+            <table class="table bg-white">
+                <thead class="bg-info text-white">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Cost Per Unit</th>
+                        <th scope="col">COGS</th>
+                        <th scope="col">Holding Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.cost_per_unit }}</td>
+                        <td>{{ item.cogs }}</td>
+                        <td>{{ item.holding_cost }}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+    </div>
+</div>
+{% endblock %}
