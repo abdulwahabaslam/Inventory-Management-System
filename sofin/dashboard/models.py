@@ -16,6 +16,7 @@ class Product(models.Model):
     cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     cogs = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0)
     holding_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0)
+    obs_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0)
 
     def __str__(self):
         return f'{self.name}-{self.quantity}'
@@ -52,9 +53,21 @@ class Order(models.Model):
 class InventoryMetrics(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     turnover_rate = models.FloatField(null=True)
-    holding_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    obsolescence_risks = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     date = models.DateTimeField(auto_now_add=True)
+
+    def calculate_inventory_turnover_rate(self):
+        total_cogs = Order.objects.filter(product=self.product).aggregate(total_cogs=models.Sum('order_cost'))['total_cogs'] or 0
+        average_inventory = (self.product.cogs + self.product.holding_cost) / 2
+
+        if average_inventory != 0:
+            turnover_rate = total_cogs / average_inventory
+        else:
+            turnover_rate = 0
+
+        return turnover_rate
+    def save(self, *args, **kwargs):
+        self.turnover_rate = self.calculate_inventory_turnover_rate()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.product} - Date: {self.date}'
