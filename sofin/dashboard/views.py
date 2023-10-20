@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Product, Order
+from .models import Product, Order, InventoryMetrics
 from .forms import ProductForm, OrderForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from joblib import load
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+
 
 # Create your views here.
 
@@ -93,8 +99,27 @@ def product_delete(request, pk):
 @login_required
 def product_view(request, pk):
     item = Product.objects.get(id=pk)
+    try:
+        inventory_metrics = InventoryMetrics.objects.get(product=item)
+        turnover_rate = inventory_metrics.turnover_rate
+    except InventoryMetrics.DoesNotExist:
+        turnover_rate = 0
+    
+    turnover_rate = 5
+
+    holding_cost = item.holding_cost
+    obsolescence_risk = item.obs_cost
+
+    model = load('./Saved_Models/inventory_health_model.joblib')
+
+    y_pred = model.predict([[turnover_rate, holding_cost, obsolescence_risk]])
+
+    
+    health = y_pred[0]
+
     context = {
         'item':item,
+        'health': health,
     }
     return render(request, 'dashboard/product_view.html', context)
 
