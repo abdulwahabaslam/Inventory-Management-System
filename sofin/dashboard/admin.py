@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Order, InventoryMetrics
+from .models import Product, Order, InventoryMetrics, Equipment
 from django.contrib.auth.models import Group
 
 class ProductAdmin(admin.ModelAdmin):
@@ -10,5 +10,6 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order)
 admin.site.register(InventoryMetrics)
+admin.site.register(Equipment)
 # UnRegister your models here.
 admin.site.unregister(Group)

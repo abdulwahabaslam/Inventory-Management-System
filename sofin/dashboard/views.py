@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Product, Order, InventoryMetrics
-from .forms import ProductForm, OrderForm
+from .models import Product, Order, InventoryMetrics, Equipment
+from .forms import ProductForm, OrderForm, EquipmentForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from joblib import load
@@ -104,17 +104,11 @@ def product_view(request, pk):
         turnover_rate = inventory_metrics.turnover_rate
     except InventoryMetrics.DoesNotExist:
         turnover_rate = 0
-    
-    turnover_rate = 5
-
     holding_cost = item.holding_cost
     obsolescence_risk = item.obs_cost
 
     model = load('./Saved_Models/inventory_health_model.joblib')
-
     y_pred = model.predict([[turnover_rate, holding_cost, obsolescence_risk]])
-
-    
     health = y_pred[0]
 
     context = {
@@ -157,6 +151,57 @@ def order(request):
     }
     return render(request, 'dashboard/order.html', context)
 
+@login_required
+def equipment(request):
+    equipments = Equipment.objects.all()
+    if request.method == 'POST':
+        form = EquipmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            equipment_name = form.cleaned_data.get('name')
+            messages.success(request, f'{equipment_name} has been added')
+            return redirect('dashboard-equipments')
+    else:
+        form = EquipmentForm()
+    context = {
+        'equipments': equipments,
+        'form': form,
+    }
+    return render(request, 'dashboard/equipment.html', context)
+
+@login_required
+def equipment_delete(request, pk):
+    equipment = Equipment.objects.get(id=pk)
+    if request.method == 'POST':
+        equipment.delete()
+        return redirect('dashboard-equipments')
+    context = {
+        'equipment':equipment,
+    }
+    return render(request, 'dashboard/equipment_delete.html', context)
+
+@login_required
+def equipment_edit(request, pk):
+    equipment = Equipment.objects.get(id=pk)
+    if request.method == 'POST':
+        form = EquipmentForm(request.POST, instance=equipment)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard-equipments')
+    else:
+        form = EquipmentForm(instance=equipment)
+    context = {
+        'form': form,
+    }
+    return render(request, 'dashboard/equipment_edit.html', context)
+
+@login_required
+def equipment_view(request, pk):
+    equipment = Equipment.objects.get(id=pk)
+    context = {
+        'equipment':equipment,
+    }
+    return render(request, 'dashboard/equipment_view.html', context)
 
 @login_required
 def customer(request):
