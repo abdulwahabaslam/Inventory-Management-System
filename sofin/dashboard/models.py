@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -87,6 +88,15 @@ class Equipment(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     category = models.CharField(max_length=20, choices=EQUIPMENT_CATEGORY, null=True)
+    maintenance_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}-{self.category}'
+
+    def is_maintenance_required(self):
+        if not self.maintenance_date:
+            return False  
+        today = timezone.now().date()
+        if (today - self.maintenance_date).days >= 45:
+            return True
+        return False

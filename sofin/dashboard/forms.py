@@ -15,4 +15,4 @@ class OrderForm(forms.ModelForm):
 class EquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = ['name', 'description', 'purchase_date', 'price', 'quantity', 'category']
+        fields = ['name', 'description', 'purchase_date', 'price', 'quantity', 'category', 'maintenance_date']

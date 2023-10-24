@@ -117,7 +117,6 @@ def product_view(request, pk):
     }
     return render(request, 'dashboard/product_view.html', context)
 
-
 @login_required
 def product_edit(request, pk):
     item = get_object_or_404(Product, id=pk)
@@ -198,8 +197,10 @@ def equipment_edit(request, pk):
 @login_required
 def equipment_view(request, pk):
     equipment = Equipment.objects.get(id=pk)
+    maintenance_required = equipment.is_maintenance_required()
     context = {
         'equipment':equipment,
+        'maintenance_required': maintenance_required,
     }
     return render(request, 'dashboard/equipment_view.html', context)
 
