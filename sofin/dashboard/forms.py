@@ -10,7 +10,7 @@ class ProductForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['product', 'order_quantity']
+        fields = ['product', 'order_quantity', 'delivery_date', 'delivery_time']
 
 class EquipmentForm(forms.ModelForm):
     class Meta:

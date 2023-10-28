@@ -36,6 +36,8 @@ class Order(models.Model):
     order_quantity = models.PositiveIntegerField(null=True)
     date = models.DateTimeField(auto_now_add=True)
     order_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    delivery_date = models.DateField(null=True, blank=True)
+    delivery_time = models.TimeField(null=True, blank=True)
 
     def calculate_cogs(self):
         return self.product.cost_per_unit * self.order_quantity
@@ -100,3 +102,9 @@ class Equipment(models.Model):
         if (today - self.maintenance_date).days >= 45:
             return True
         return False
+
+class OrderDelivery(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    staff_member = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    pass

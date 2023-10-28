@@ -104,6 +104,8 @@ def product_view(request, pk):
         turnover_rate = inventory_metrics.turnover_rate
     except InventoryMetrics.DoesNotExist:
         turnover_rate = 0
+    
+    # turnover_rate = 5.28
     holding_cost = item.holding_cost
     obsolescence_risk = item.obs_cost
 
