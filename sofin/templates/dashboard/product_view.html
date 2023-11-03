@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row my-4">
-    <div class="col-md-8 offset-md-3 p-3 bg-white">
+    <div class="col-md-10 offset-md-1 p-3 bg-white">
         <h4>View Product Item</h4>
         <hr>
             <table class="table bg-white">
@@ -14,10 +14,12 @@
                         <th scope="col">Category</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Cost</th>
+                        <th scope="col">Market Price</th>
                         <th scope="col">COGS</th>
                         <th scope="col">Holding Cost</th>
                         <th scope="col">Obsolescence Cost</th>
                         <th scope="col">Health</th>
+                        <th scope="col">Date Created</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,10 +28,12 @@
                         <td>{{ item.category }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.cost_per_unit }}</td>
+                        <td>{{ item.market_price }}</td>
                         <td>{{ item.cogs }}</td>
                         <td>{{ item.holding_cost }}</td>
                         <td>{{ item.obs_cost }}</td>
                         <td>{{ health }}</td>
+                        <td>{{ item.created_at }}</td>
                     </tr>
                     
                 </tbody>
