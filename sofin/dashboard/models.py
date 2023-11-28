@@ -108,5 +108,3 @@ class Equipment(models.Model):
 class OrderDelivery(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     staff_member = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    pass

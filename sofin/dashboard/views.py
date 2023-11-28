@@ -9,10 +9,28 @@ from joblib import load
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
-
-
+import csv
 
 # Create your views here.
+
+def product_csv(request):
+    response = HttpResponse(content_type = 'text/csv')
+    response['Content-Deposition'] = 'attachment; filename=products.csv'
+
+    #Creating a csv writer
+    writer = csv.writer(response)
+
+    #Designating the model
+    products = Product.objects.all()
+
+    #Adding Column headings to the csv file
+    writer.writerow(['Product Name', 'Product Category'])
+
+    for product in products:
+        writer.writerow([product.name, product.category])
+
+    return response
+
 
 @login_required
 def index(request):
