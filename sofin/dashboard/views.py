@@ -24,10 +24,10 @@ def product_csv(request):
     products = Product.objects.all()
 
     #Adding Column headings to the csv file
-    writer.writerow(['Product Name', 'Product Category'])
+    writer.writerow(['Product Name', 'Product Category', 'Quantity', 'Price Per Unit', 'Market Price', 'Cost of Goods Sold', 'Holding Cost', 'Obsolete Cost', 'Data Created'])
 
     for product in products:
-        writer.writerow([product.name, product.category])
+        writer.writerow([product.name, product.category, product.quantity, product.cost_per_unit, product.market_price, product.cogs, product.holding_cost, product.obs_cost, product.created_at])
 
     return response
 
